@@ -87,6 +87,8 @@ namespace GOTHIC_ENGINE {
   }
 
   void Game_Unpause() {
+    GDiscordRPC::Instance().ReadOptions();
+    GDiscordRPC::Instance().Update();
   }
 
   void Game_DefineExternals() {
@@ -141,7 +143,7 @@ namespace GOTHIC_ENGINE {
     Enabled( False ) Game_LoadBegin_Trigger,
     Enabled( False ) Game_LoadEnd_Trigger,
     Enabled( False ) Game_Pause,
-    Enabled( False ) Game_Unpause,
+    Enabled( AppDefault ) Game_Unpause,
     Enabled( False ) Game_DefineExternals
   );
 }

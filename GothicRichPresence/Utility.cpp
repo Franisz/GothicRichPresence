@@ -2,13 +2,13 @@
 // Union SOURCE file
 
 namespace GOTHIC_ENGINE {
-  std::string ansi_to_utf8( const char* str ) {
+  std::string ansi_to_utf8( const char* str, uint ansi_codepage = ANSI_CODEPAGE_DEFAULT ) {
     std::string res;
     int result_u, result_c;
-    result_u = MultiByteToWideChar( ANSI_CODEPAGE_DEFAULT, 0, str, -1, 0, 0 );
+    result_u = MultiByteToWideChar( ansi_codepage, 0, str, -1, 0, 0 );
     if ( !result_u ) { return 0; }
     wchar_t* ures = new wchar_t[result_u];
-    if ( !MultiByteToWideChar( ANSI_CODEPAGE_DEFAULT, 0, str, -1, ures, result_u ) ) {
+    if ( !MultiByteToWideChar( ansi_codepage, 0, str, -1, ures, result_u ) ) {
       delete[] ures;
       return 0;
     }
