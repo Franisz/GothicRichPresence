@@ -2,7 +2,6 @@
 // Union SOURCE file
 
 namespace GOTHIC_ENGINE {
-
   GDiscordRPC GDiscordRPC::oInstance;
 
   void GDiscordRPC::Initialize()
@@ -27,7 +26,6 @@ namespace GOTHIC_ENGINE {
         usingCustomKey = true;
       }
     }
-
 
     // Init RPC with given app key (default or from the config)
     DiscordEventHandlers handlers;
@@ -126,7 +124,7 @@ namespace GOTHIC_ENGINE {
         int day, hour, min;
         ogame->GetTime( day, hour, min );
         data.smallImageKey = (hour >= 6 && hour < 20) ? images.day : images.night;
-        data.smallImageText = string::Combine( "%s %u - %u:%s", strings.day, day, hour, (min > 9) ? A min : A "0" + A min );
+        data.smallImageText = string::Combine( "%s %u - %u:%s", strings.day, day + 1, hour, (min > 9) ? A min : A "0" + A min );
       }
 
       // Hero guild and level
