@@ -2,7 +2,6 @@
 // Union SOURCE file
 
 namespace GOTHIC_ENGINE {
-
   GDiscordRPC GDiscordRPC::oInstance;
 
   void GDiscordRPC::Initialize()
@@ -27,7 +26,6 @@ namespace GOTHIC_ENGINE {
         usingCustomKey = true;
       }
     }
-
 
     // Init RPC with given app key (default or from the config)
     DiscordEventHandlers handlers;
@@ -131,7 +129,7 @@ namespace GOTHIC_ENGINE {
 
       // Hero guild and level
       if ( strings.level.Length() ) {
-        string guild = A ansi_to_utf8( player->GetGuildName().ToChar() ).c_str();
+        string guild = A ansi_to_utf8( GetGuildName().ToChar() ).c_str();
         data.state = string::Combine( "%s - %s %u", guild, strings.level, player->level );
 
         // Adding current chapter info if kapitel variable is present

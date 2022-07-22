@@ -64,6 +64,7 @@ namespace GOTHIC_ENGINE {
     void ParseConfig();
     void ParseWorlds();
     void ParseStrings();
+    zSTRING GetGuildName();
     string GetSysPackLanguage();
     void Update();
   };
