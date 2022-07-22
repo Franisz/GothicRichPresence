@@ -49,11 +49,16 @@ namespace GOTHIC_ENGINE {
     nlohmann::json config;
     const string configFileName = "GothicRichPresence.json";
 
-    string language;
+    TSystemLangID language;
+    text langSymbol;
+    uint ansi_codepage;
+
     std::vector< WorldInfo > vWorlds;
     RPCStrings strings;
     RPCImages images;
     bool usingCustomKey;
+    bool initializedOptions;
+    bool enabled;
 
   public:
     GDiscordRPC( const GDiscordRPC& ) = delete;
@@ -61,11 +66,13 @@ namespace GOTHIC_ENGINE {
     static GDiscordRPC& Instance() { return oInstance; }
 
     void Initialize();
+    void ReadOptions();
     void ParseConfig();
     void ParseWorlds();
     void ParseStrings();
     zSTRING GetGuildName();
-    string GetSysPackLanguage();
+    text GetLanguageSymbol( TSystemLangID id );
+    uint GetGameEncoding();
     void Update();
   };
 }

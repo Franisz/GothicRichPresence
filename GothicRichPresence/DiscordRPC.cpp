@@ -6,7 +6,7 @@ namespace GOTHIC_ENGINE {
 
   void GDiscordRPC::Initialize()
   {
-    language = GetSysPackLanguage().Lower();
+    ReadOptions();
 
     ParseConfig();
     ParseWorlds();
@@ -35,11 +35,72 @@ namespace GOTHIC_ENGINE {
     Update();
   }
 
-  string GDiscordRPC::GetSysPackLanguage()
+  void GDiscordRPC::ReadOptions() {
+    if ( !initializedOptions ) {
+      enabled = zoptions->ReadBool( PLUGIN_NAME, "Enabled", true );
+      language = (TSystemLangID)(zoptions->ReadInt( PLUGIN_NAME, "Language", Union.GetSystemLanguage() - 1 ) + 1);
+      langSymbol = GetLanguageSymbol( language );
+      ansi_codepage = GetGameEncoding();
+      initializedOptions = true;
+      return;
+    }
+
+    auto newLang = (TSystemLangID)(zoptions->ReadInt( PLUGIN_NAME, "Language", Union.GetSystemLanguage() - 1 ) + 1);
+    if ( language != newLang ) {
+      language = newLang;
+      langSymbol = GetLanguageSymbol( language );
+      vWorlds.clear();
+      ParseWorlds();
+      ParseStrings();
+    }
+
+    bool oldMode = enabled;
+    enabled = zoptions->ReadBool( PLUGIN_NAME, "Enabled", true );
+    if ( oldMode && enabled == false )
+      Discord_ClearPresence();
+  }
+
+  text GDiscordRPC::GetLanguageSymbol( TSystemLangID id )
   {
-    string lang;
-    Union.GetSysPackOption().Read( lang, "CORE", "Language" );
-    return (lang.Length()) ? lang : "eng";
+    text sym;
+
+    switch ( id )
+    {
+    case UnionCore::Lang_Rus:
+      sym = "rus";
+      break;
+    case UnionCore::Lang_Eng:
+      sym = "eng";
+      break;
+    case UnionCore::Lang_Ger:
+      sym = "ger";
+      break;
+    case UnionCore::Lang_Pol:
+      sym = "pol";
+      break;
+    default:
+      sym = "eng";
+      break;
+    }
+
+    return sym;
+  }
+
+  uint GDiscordRPC::GetGameEncoding() {
+    if ( auto sym = parser->GetSymbol( "MOBNAME_PAN" ) ) {
+      zSTRING name = sym->stringdata;
+
+      if ( name == "���������" )
+        return ANSI_CODEPAGE_CYRILLIC;
+
+      if ( name == "Patelnia" )
+        return ANSI_COPEDAGE_CENTRALOREASTERN_EUROPEAN;
+
+      if ( name == "Pfanne" )
+        return ANSI_COPEDAGE_NORTHORWESTERN_EUROPEAN;
+    }
+
+    return ANSI_CODEPAGE_DEFAULT;
   }
 
   void GDiscordRPC::ParseConfig()
@@ -84,20 +145,20 @@ namespace GOTHIC_ENGINE {
       if ( !el.value()["name"].is_object() )
         continue;
 
-      if ( !el.value()["name"][language.ToChar()].is_string() )
+      if ( !el.value()["name"][langSymbol].is_string() )
         continue;
 
       WorldInfo world;
       world.zen = A el.value()["zen"].get<std::string>().c_str();
       world.image = A el.value()["image"].get<std::string>().c_str();
-      world.name = A el.value()["name"][language.ToChar()].get<std::string>().c_str();
+      world.name = A el.value()["name"][langSymbol].get<std::string>().c_str();
       vWorlds.push_back( world );
     }
   }
 
   void GDiscordRPC::ParseStrings()
   {
-#define GETRPCSTRING(x) ( ( config["strings"][x].is_object() && config["strings"][x][language.ToChar()].is_string() ) ? A config["strings"][x][language.ToChar()].get<std::string>().c_str() : "" )
+#define GETRPCSTRING(x) ( ( config["strings"][x].is_object() && config["strings"][x][langSymbol].is_string() ) ? A config["strings"][x][langSymbol].get<std::string>().c_str() : "" )
 
     // Modification title when playing from gothic starter and not using custom application
     if ( zgameoptions && !Union.GetGameIni().Compare( "gothicgame.ini" ) && !usingCustomKey )
@@ -116,6 +177,9 @@ namespace GOTHIC_ENGINE {
 
   void GDiscordRPC::Update()
   {
+    if ( !enabled )
+      return;
+
     RPCData data;
 
     if ( ogame && ogame->GetGameWorld() && player ) {
@@ -124,12 +188,12 @@ namespace GOTHIC_ENGINE {
         int day, hour, min;
         ogame->GetTime( day, hour, min );
         data.smallImageKey = (hour >= 6 && hour < 20) ? images.day : images.night;
-        data.smallImageText = string::Combine( "%s %u - %u:%s", strings.day, day, hour, (min > 9) ? A min : A "0" + A min );
+        data.smallImageText = string::Combine( "%s %u - %u:%s", strings.day, day + 1, hour, (min > 9) ? A min : A "0" + A min );
       }
 
       // Hero guild and level
       if ( strings.level.Length() ) {
-        string guild = A ansi_to_utf8( GetGuildName().ToChar() ).c_str();
+        string guild = A ansi_to_utf8( GetGuildName().ToChar(), ansi_codepage ).c_str();
         data.state = string::Combine( "%s - %s %u", guild, strings.level, player->level );
 
         // Adding current chapter info if kapitel variable is present
