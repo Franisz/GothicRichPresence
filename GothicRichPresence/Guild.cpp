@@ -18,6 +18,11 @@ namespace GOTHIC_ENGINE {
         if ( auto sym = parser->GetSymbol( "RX_GuildDarkMage" ) )
           return sym->stringdata;
 
+    if ( int index = parser->GetIndex( "RX_IsNecroSummoner" ) )
+      if ( int ret = *(int*)parser->CallFunc( index ) )
+        if ( auto sym = parser->GetSymbol( "RX_GuildSummoner" ) )
+          return sym->stringdata;
+
     return player->GetGuildName();
   }
 }
