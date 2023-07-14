@@ -10,7 +10,6 @@ namespace GOTHIC_ENGINE {
 
     ParseConfig();
     ParseWorlds();
-    ParseStrings();
 
     // Default app keys
 #if ENGINE >= Engine_G2
@@ -26,6 +25,8 @@ namespace GOTHIC_ENGINE {
         usingCustomKey = true;
       }
     }
+
+    ParseStrings();
 
     // Init RPC with given app key (default or from the config)
     DiscordEventHandlers handlers;

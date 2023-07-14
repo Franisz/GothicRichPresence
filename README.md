@@ -10,8 +10,7 @@ This is [Discord Rich Presence](https://discord.com/rich-presence) plugin made i
 
 1. Download and install [Union](https://worldofplayers.ru/threads/40376/).
 2. Download `GothicRichPresence.vdf` file from the [latest release](../../releases) and place it in `<GothicPath>\Data\Plugins\` folder.
-3. ~~Remember to add Gothic to games detected by Discord if you haven't already.~~ (not necessary)
-4. If for some reason, language of the rich presence is not right, change `Language` entry in `Systempack.ini`.
+3. If for some reason, language of the rich presence is not right, change is via ingame menu.
 
 # Usage for mod developers
 
