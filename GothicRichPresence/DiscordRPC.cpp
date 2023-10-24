@@ -91,7 +91,7 @@ namespace GOTHIC_ENGINE {
     if ( auto sym = parser->GetSymbol( "MOBNAME_PAN" ) ) {
       zSTRING name = sym->stringdata;
 
-      if ( name == "Сковорода" )
+      if ( name == "пїЅпїЅпїЅпїЅпїЅпїЅпїЅпїЅпїЅ" )
         return ANSI_CODEPAGE_CYRILLIC;
 
       if ( name == "Patelnia" )
@@ -194,7 +194,7 @@ namespace GOTHIC_ENGINE {
 
       // Hero guild and level
       if ( strings.level.Length() ) {
-        string guild = A ansi_to_utf8( player->GetGuildName().ToChar(), ansi_codepage ).c_str();
+        string guild = A ansi_to_utf8( GetGuildName().ToChar(), ansi_codepage ).c_str();
         data.state = string::Combine( "%s - %s %u", guild, strings.level, player->level );
 
         // Adding current chapter info if kapitel variable is present

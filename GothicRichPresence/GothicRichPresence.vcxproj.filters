@@ -2828,6 +2828,9 @@
     <ClInclude Include="Utility.cpp">
       <Filter>Plugin\Workspace\DiscordRPC</Filter>
     </ClInclude>
+    <ClInclude Include="Guild.cpp">
+      <Filter>Plugin\Workspace\DiscordRPC</Filter>
+    </ClInclude>
   </ItemGroup>
   <ItemGroup>
     <None Include=".build_settings.inl">

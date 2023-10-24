@@ -70,6 +70,7 @@ namespace GOTHIC_ENGINE {
     void ParseConfig();
     void ParseWorlds();
     void ParseStrings();
+    zSTRING GetGuildName();
     text GetLanguageSymbol( TSystemLangID id );
     uint GetGameEncoding();
     void Update();
