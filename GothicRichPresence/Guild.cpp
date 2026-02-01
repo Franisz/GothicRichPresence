@@ -23,6 +23,11 @@ namespace GOTHIC_ENGINE {
         if ( auto sym = parser->GetSymbol( "RX_GuildSummoner" ) )
           return sym->stringdata;
 
+    if ( int index = parser->GetIndex( "RX_IsScout" ) )
+      if ( int ret = *(int*)parser->CallFunc( index ) )
+        if ( auto sym = parser->GetSymbol( "RX_GuildScout" ) )
+          return sym->stringdata;
+
     return player->GetGuildName();
   }
 }
