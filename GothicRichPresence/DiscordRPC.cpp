@@ -163,7 +163,7 @@ namespace GOTHIC_ENGINE {
 
     // Modification title when playing from gothic starter and not using custom application
     if ( zgameoptions && !Union.GetGameIni().Compare( "gothicgame.ini" ) && !usingCustomKey )
-      strings.title = A zgameoptions->ReadString( "Info", "Title", "Unknown Title" );
+      strings.title = A ansi_to_utf8(zgameoptions->ReadString("Info", "Title", "Unknown Title").ToChar(), ansi_codepage).c_str();
 
     if ( !config["strings"].is_object() )
       return;
